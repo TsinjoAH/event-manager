@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class EventsController {
 
@@ -33,8 +35,12 @@ public class EventsController {
     }
 
     @GetMapping("/add-event")
-    public ModelAndView eventForm() {
+    public ModelAndView eventForm(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("layout");
+        if (session.getAttribute("connected") == null) {
+            modelAndView.setViewName("redirect:admin/login");
+            return modelAndView;
+        }
         modelAndView.addObject("mainPage", "add-event.jsp");
         modelAndView.addObject("pageTitle", "Ajout");
         modelAndView.addObject("formData", service.fetchFormData());
