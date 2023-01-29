@@ -1,4 +1,4 @@
-package com.management.events.models;
+package com.management.events.models.common;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

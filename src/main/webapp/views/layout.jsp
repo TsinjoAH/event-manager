@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title><%= request.getAttribute("pageTitle") %></title>
+        <title>${pageTitle}</title>
         <base href="/">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
         <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/assets/dist/img/AdminLTELogo.png">
@@ -72,7 +72,7 @@
             <div class='content-wrapper'>
                 <section class='content'>
                     <div class='container-fluid'>
-
+                        <jsp:include page="${mainPage}" />
                     </div>
                 </section>
             </div>
