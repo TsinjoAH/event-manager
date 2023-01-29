@@ -8,7 +8,7 @@ public class BaseController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:add-event";
+        return "redirect:list-event";
     }
 
 }
