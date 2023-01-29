@@ -64,8 +64,10 @@ public class EventFilter {
             conditions.add(Restrictions.eq("type", t));
         }
         if (keyword != null) {
-            conditions.add(Restrictions.ilike("title", "%" + keyword + "%"));
-            conditions.add(Restrictions.ilike("description", "%" + keyword + "%"));
+            conditions.add(Restrictions.or(
+                Restrictions.ilike("title", "%" + keyword + "%"),
+                Restrictions.ilike("description", "%" + keyword + "%"))
+            );
         }
         return conditions.toArray(new Criterion[0]);
     }

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/fontawesome-free/css/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/dist/css/adminlte.min.css">
@@ -45,7 +46,7 @@
                 <div class="input-group input-group-lg">
                     <input name="keyword" value="${filter.getKeyword()}" type="search" class="form-control form-control-lg" placeholder="Type your keywords here" >
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-lg btn-default">
+                        <button onclick="search()" class="btn btn-lg btn-default">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -58,6 +59,11 @@
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1">
         <div class="list-group">
+            <c:if test="${events.size() == 0}" >
+                <div class="alert alert-info">
+                    Aucune resultat
+                </div>
+            </c:if>
             <c:forEach items="${events}" var="item">
                 <div class="list-group-item">
                     <div class="row">
@@ -93,6 +99,12 @@
     function goto(page) {
         const form = document.forms[0];
         form.page.value = parseInt(form.page.value) + page;
+        form.submit();
+    }
+
+    function search() {
+        const form = document.forms[0];
+        form.page.value = 0;
         form.submit();
     }
 </script>

@@ -149,8 +149,7 @@
                     processData: false,
                     contentType: 'application/json',
                     success: function (response) {
-                        console.log(response);
-                        btn.attr('disabled', false)
+                        window.location.replace("${pageContext.request.contextPath}/list-event");
                     },
                     error: function (error) {
                         let err = JSON.parse(error.responseText);

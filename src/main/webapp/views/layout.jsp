@@ -54,14 +54,25 @@
                     <nav class='mt-2'>
 
                         <ul class='nav nav-pills nav-sidebar flex-column' data-widget='treeview' role='menu' data-accordion='false'>
+
                             <li class='nav-item'>
-                                <a href="${pageContext.request.contextPath}/resourcess" class='nav-link'>
-                                    <i class='nav-icon fas fa-receipt'></i>
+                                <a href="${pageContext.request.contextPath}/list-event" class='nav-link'>
+                                    <i class='nav-icon fas fa-list'></i>
                                     <p>
-                                        Carree minier
+                                        Liste
                                     </p>
                                 </a>
                             </li>
+
+                            <li class='nav-item'>
+                                <a href="${pageContext.request.contextPath}/add-event" class='nav-link'>
+                                    <i class='nav-icon fas fa-newspaper'></i>
+                                    <p>
+                                        Ajout
+                                    </p>
+                                </a>
+                            </li>
+
                         </ul>
 
                     </nav>
