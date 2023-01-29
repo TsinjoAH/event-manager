@@ -16,7 +16,7 @@
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/select2/css/select2.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/dist/css/adminlte.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/customCSS/style.css">
         </div>
@@ -90,7 +90,7 @@
         <%-- js scripts --%>
         <div>
             <script src="${pageContext.request.contextPath}/resources/assets/plugins/jquery/jquery.min.js"></script>
-
+            <script src="${pageContext.request.contextPath}/resources/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
             <script src="${pageContext.request.contextPath}/resources/assets/plugins/datatables/jquery.dataTables.min.js"></script>
             <script src="${pageContext.request.contextPath}/resources/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
             <script src="${pageContext.request.contextPath}/resources/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -108,8 +108,13 @@
                         });
                 });
             </script>
-
-            <script src="${pageContext.request.contextPath}/resources/assets/dist/js/adminlte.js"></script>
+            <script src="${pageContext.request.contextPath}/resources/assets/plugins/select2/js/select2.full.min.js"></script>
+            <script src="${pageContext.request.contextPath}/resources/assets/dist/js/adminlte.min.js"></script>
+            <script>
+                $(function () {
+                    $('.select2').select2()
+                });
+            </script>
         </div>
     </body>
 

@@ -3,6 +3,7 @@ package com.management.events.controllers;
 import com.management.events.exceptions.FormattedError;
 import com.management.events.exceptions.InputException;
 import com.management.events.models.Event;
+import com.management.events.models.formdata.EventFilter;
 import com.management.events.services.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,13 @@ public class EventsController {
     }
 
     @GetMapping("/list-event")
-    public ModelAndView eventList() {
+    public ModelAndView eventList(EventFilter filter) {
         ModelAndView modelAndView = new ModelAndView("layout");
-        modelAndView.addObject("mainPage", "add-event.jsp");
+        modelAndView.addObject("mainPage", "list-event.jsp");
         modelAndView.addObject("pageTitle", "Liste");
+        modelAndView.addObject("formData", service.fetchFormData());
+        modelAndView.addObject("events", service.findAll(filter));
+        modelAndView.addObject("filter", filter);
         return modelAndView;
     }
 

@@ -16,7 +16,7 @@ public class Util {
     static Pattern pattern = Pattern.compile("data:image/(?<ext>(png|jpeg|jpg));base64,");
 
     public static String saveImage(String image) throws InputException, IOException {
-        String path = "/home/tsinjo/workspace/workspace/Mr_Naina/event-manager/images/";
+        String path = "/home/tsinjo/workspace/workspace/Mr_Naina/event-manager/target/spring-mvc-1.0-SNAPSHOT/resources/images/";
         String fileName = DigestUtils.sha1Hex(LocalDateTime.now().toString());
         Image img = parseImage(image);
         if (img == null) {

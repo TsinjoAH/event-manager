@@ -1,16 +1,18 @@
 package com.management.events.services;
 
-import com.management.events.exceptions.InputException;
+import com.management.events.models.formdata.EventFilter;
 import com.management.events.utils.Util;
 import com.management.events.models.City;
 import com.management.events.models.Event;
 import com.management.events.models.Type;
 import com.management.events.models.formdata.EventFormData;
 import com.spring.hibernate.dao.HibernateDao;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -34,8 +36,20 @@ public class EventService {
         return formData;
     }
 
-    public List<Event> findAll () {
-        return dao.findAll(Event.class);
+    public List<Event> findAll (EventFilter filter) {
+        Criterion[] conditions = filter.getConditions();
+        Order order = filter.getOrder();
+        int first = filter.getPage() * 4;
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Criteria criteria = session.createCriteria(Event.class);;
+            for (Criterion condition : conditions) {
+                criteria.add(condition);
+            }
+            criteria.addOrder(order);
+            criteria.setFirstResult(first);
+            criteria.setMaxResults(4);
+            return criteria.list();
+        }
     }
 
     public Event create (Event event) throws Exception {
