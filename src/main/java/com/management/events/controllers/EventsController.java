@@ -23,9 +23,34 @@ public class EventsController {
         this.service = service;
     }
 
+    @PostMapping("/save-event")
+    public ResponseEntity<?> saveEvent(@RequestBody Event event) throws Exception{
+        try {
+            return ResponseEntity.ok(service.create(event));
+        }
+        catch (InputException e) {
+            return ResponseEntity.badRequest().body(new FormattedError(e));
+        }
+    }
+
     @GetMapping("/list-event")
-    public ModelAndView eventList(EventFilter filter) {
+    public ModelAndView eventList(EventFilter filter, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("layout");
+        if (session.getAttribute("connected") == null) {
+            modelAndView.setViewName("redirect:admin/login");
+            return modelAndView;
+        }
+        return list(modelAndView, filter);
+    }
+
+    @GetMapping("/front-office")
+    public ModelAndView frontOfficeList(EventFilter filter) {
+        ModelAndView modelAndView = new ModelAndView("layout-front");
+        return list(modelAndView, filter);
+    }
+
+
+    private ModelAndView list (ModelAndView modelAndView, EventFilter filter) {
         modelAndView.addObject("mainPage", "list-event.jsp");
         modelAndView.addObject("pageTitle", "Liste");
         modelAndView.addObject("formData", service.fetchFormData());
@@ -47,14 +72,5 @@ public class EventsController {
         return modelAndView;
     }
 
-    @PostMapping("/save-event")
-    public ResponseEntity<?> saveEvent(@RequestBody Event event) throws Exception{
-        try {
-            return ResponseEntity.ok(service.create(event));
-        }
-        catch (InputException e) {
-            return ResponseEntity.badRequest().body(new FormattedError(e));
-        }
-    }
 
 }

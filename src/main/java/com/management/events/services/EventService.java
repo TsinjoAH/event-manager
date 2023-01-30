@@ -1,5 +1,6 @@
 package com.management.events.services;
 
+import com.management.events.exceptions.InputException;
 import com.management.events.models.formdata.EventFilter;
 import com.management.events.utils.Util;
 import com.management.events.models.City;
@@ -55,6 +56,11 @@ public class EventService {
     public Event create (Event event) throws Exception {
         if (event.getType().getId() == 2) {
             event.setEndDate(null);
+        }
+        else {
+            if (!event.getEndDate().after(event.getStartDate())) {
+                throw new InputException("verifiez vos dates");
+            }
         }
         event.setImage(Util.saveImage(event.getImage()));
         return dao.save(event);
