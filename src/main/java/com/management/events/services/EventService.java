@@ -52,6 +52,15 @@ public class EventService {
         return criteria;
     }
 
+    // update event status to 10 from id
+    public void validateEvent(int id) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Event event = dao.findById(session, Event.class, id);
+            event.setStatus(10);
+            dao.save(session, event);
+        }
+    }
+
     public List<Event> getValidatedEvents(EventFilter filter) {
         try (Session session = dao.getSessionFactory().openSession()) {
             Criteria criteria = findAll(session, filter);

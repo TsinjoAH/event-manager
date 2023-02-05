@@ -41,6 +41,12 @@ public class Event extends HasId {
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
+
+    // is validated method
+    public boolean isValidated() {
+        return status > 0;
+    }
+
     public Integer getStatus() {
         return status;
     }

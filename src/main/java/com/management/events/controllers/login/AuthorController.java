@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthorController extends LoginController<Author, AuthorService> {
 
     public AuthorController(AuthorService service) {
-        super(service, "author_connected", "/list-event", "author");
+        super(service, "author_connected", "/author/list-event", "author");
     }
 
 }

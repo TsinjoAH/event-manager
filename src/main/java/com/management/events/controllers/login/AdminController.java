@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController extends LoginController<Admin, AdminService> {
 
     public AdminController(AdminService service) {
-        super(service, "connected", "/list-event", "admin");
+        super(service, "connected", "/admin/list-event", "admin");
     }
 
 }

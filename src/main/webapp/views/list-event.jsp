@@ -65,6 +65,9 @@
                 </div>
             </c:if>
             <c:forEach items="${events}" var="item">
+                <%-- set color var --%>
+                <c:set var="color" value='${!(item.type.id == 1) ? "success" : "primary"}' />
+
                 <div class="list-group-item">
                     <div class="row">
                         <div class="col-auto">
@@ -73,10 +76,14 @@
                         <div class="col px-4">
                             <div>
                                 <div class="float-right">
-                                    <span class="badge badge-${item.type.id == 1 ? "success" : "primary"}">${item.type.name}</span>
+                                    <span class="badge badge-${color}">${item.type.name}</span>
                                 </div>
-                                <h3>${item.title}</h3>
+                                <h3 class="text-${color}" >${item.title}</h3>
                                 <p class="mb-0">${item.description}</p>
+                                <%-- validate action btn if request attribute allowedValidation and isValidated false --%>
+                                <c:if test="${allowedValidation != null && allowedValidation && !item.isValidated()}" >
+                                    <a href="${pageContext.request.contextPath}/admin/events/validate/${item.id}" class="btn btn-sm btn-primary">Valider</a>
+                                </c:if>
                                 </span>
                             </div>
                         </div>

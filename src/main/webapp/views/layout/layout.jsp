@@ -56,7 +56,7 @@
                         <ul class='nav nav-pills nav-sidebar flex-column' data-widget='treeview' role='menu' data-accordion='false'>
 
                             <li class='nav-item'>
-                                <a href="${pageContext.request.contextPath}/list-event" class='nav-link'>
+                                <a href="${pageContext.request.contextPath}/admin/list-event" class='nav-link'>
                                     <i class='nav-icon fas fa-list'></i>
                                     <p>
                                         Liste des evenements
@@ -65,13 +65,14 @@
                             </li>
 
                             <li class='nav-item'>
-                                <a href="${pageContext.request.contextPath}/add-event" class='nav-link'>
+                                <a href="${pageContext.request.contextPath}/admin/pending-events" class='nav-link'>
                                     <i class='nav-icon fas fa-newspaper'></i>
                                     <p>
                                         A valider
                                     </p>
                                 </a>
                             </li>
+
                         </ul>
 
                     </nav>
