@@ -12,7 +12,6 @@
         <%-- css links --%>
         <div>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/fontawesome-free/css/all.min.css">
-
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
@@ -37,7 +36,7 @@
             <aside class='main-sidebar sidebar-dark-primary elevation-4'>
                 <a href='#' class='brand-link'>
                     <img src='${pageContext.request.contextPath}/resources/assets/dist/img/AdminLTELogo.png' alt='AdminLTE Logo' class='brand-image img-circle elevation-3'
-                    style='opacity: 0.8' />
+                         style='opacity: 0.8' />
                     <span class='brand-text font-weight-light'>Events-Manager</span>
                 </a>
 
@@ -69,6 +68,15 @@
                                     <i class='nav-icon fas fa-newspaper'></i>
                                     <p>
                                         Ajout
+                                    </p>
+                                </a>
+                            </li>
+
+                            <li class='nav-item'>
+                                <a href="${pageContext.request.contextPath}/my-events" class='nav-link'>
+                                    <i class='nav-icon fas fa-list'></i>
+                                    <p>
+                                        Not validated events
                                     </p>
                                 </a>
                             </li>

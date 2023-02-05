@@ -149,7 +149,7 @@
                     processData: false,
                     contentType: 'application/json',
                     success: function (response) {
-                        window.location.replace("${pageContext.request.contextPath}/list-event");
+                        window.location.replace("${pageContext.request.contextPath}/my-events");
                     },
                     error: function (error) {
                         let err = JSON.parse(error.responseText);

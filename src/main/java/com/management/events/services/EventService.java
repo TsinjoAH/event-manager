@@ -12,6 +12,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,19 +38,50 @@ public class EventService {
         return formData;
     }
 
-    public List<Event> findAll (EventFilter filter) {
+    private Criteria findAll(Session session, EventFilter filter) {
         Criterion[] conditions = filter.getConditions();
         Order order = filter.getOrder();
         int first = filter.getPage() * 4;
+        Criteria criteria = session.createCriteria(Event.class);;
+        for (Criterion condition : conditions) {
+            criteria.add(condition);
+        }
+        criteria.addOrder(order);
+        criteria.setFirstResult(first);
+        criteria.setMaxResults(4);
+        return criteria;
+    }
+
+    public List<Event> getValidatedEvents(EventFilter filter) {
         try (Session session = dao.getSessionFactory().openSession()) {
-            Criteria criteria = session.createCriteria(Event.class);;
-            for (Criterion condition : conditions) {
-                criteria.add(condition);
-            }
-            criteria.addOrder(order);
-            criteria.setFirstResult(first);
-            criteria.setMaxResults(4);
+            Criteria criteria = findAll(session, filter);
+            criteria.add(Restrictions.gt("status", 0));
             return criteria.list();
+        }
+    }
+
+    public List<Event> getPendingEvents(EventFilter filter) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Criteria criteria = findAll(session, filter);
+            criteria.add(Restrictions.eq("status", 0));
+            return criteria.list();
+        }
+    }
+
+    // get pending events by author
+    public List<Event> getPendingEventsByAuthor(EventFilter filter, int authorId) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Criteria criteria = findAll(session, filter);
+            criteria.add(Restrictions.eq("status", 0));
+            criteria.add(Restrictions.eq("author.id", authorId));
+            return criteria.list();
+        }
+    }
+
+
+    public List<Event> findAll (EventFilter filter) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            return findAll(session, filter).list();
         }
     }
 

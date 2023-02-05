@@ -96,14 +96,13 @@
 <br>
 
 <script>
+    const form = document.forms[0];
     function goto(page) {
-        const form = document.forms[0];
         form.page.value = parseInt(form.page.value) + page;
         form.submit();
     }
 
     function search() {
-        const form = document.forms[0];
         form.page.value = 0;
         form.submit();
     }

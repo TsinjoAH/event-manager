@@ -34,6 +34,29 @@ public class Event extends HasId {
     @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
+    private Integer status = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
     public String getImage() {
         return image;
     }

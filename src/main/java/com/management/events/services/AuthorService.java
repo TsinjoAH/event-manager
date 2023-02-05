@@ -1,13 +1,13 @@
 package com.management.events.services;
 
-import com.management.events.models.Admin;
+import com.management.events.models.Author;
 import com.spring.hibernate.dao.HibernateDao;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminService extends LoginService<Admin> {
+public class AuthorService extends LoginService<Author> {
 
-    public AdminService(HibernateDao dao) {
+    public AuthorService(HibernateDao dao) {
         super(dao);
     }
 

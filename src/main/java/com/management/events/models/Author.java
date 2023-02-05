@@ -1,6 +1,6 @@
 package com.management.events.models;
 
-import com.management.events.models.common.HasId;
+import com.management.events.models.common.HasName;
 import com.management.events.models.common.LoginEntity;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class Admin extends HasId implements LoginEntity {
+public class Author extends HasName implements LoginEntity {
 
     @Column
     private String email;
