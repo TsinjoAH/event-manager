@@ -80,11 +80,53 @@
                                 </div>
                                 <h3 class="text-${color}" >${item.title}</h3>
                                 <p class="mb-0">${item.description}</p>
-                                <%-- validate action btn if request attribute allowedValidation and isValidated false --%>
-                                <c:if test="${allowedValidation != null && allowedValidation && !item.isValidated()}" >
-                                    <a href="${pageContext.request.contextPath}/admin/events/validate/${item.id}" class="btn btn-sm btn-primary">Valider</a>
-                                </c:if>
-                                </span>
+                                <br>
+                                <p>
+                                    <u>Date:</u> ${item.getStartDate().toString().replace("T", " ").substring(0, 16)} <br>
+                                    <c:if test="${item.getEndDate() != null}" >
+                                        <u>Fin:</u> ${item.getEndDate().toString().replace("T", " ").substring(0, 16)} <br>
+                                    </c:if>
+                                    <u>Date de creation:</u> ${item.getCreationDate().toString().replace("T", " ").substring(0, 16)} <br>
+                                </p>
+                                <div class="d-flex">
+                                    <%-- validate action btn if request attribute allowedValidation and isValidated false --%>
+                                    <c:if test="${allowedValidation != null && allowedValidation && !item.isValidated()}" >
+                                        <form class="mr-2" action="${pageContext.request.contextPath}/admin/events/validate/${item.id}" method="POST">
+                                            <button class="btn btn-primary">Publier</button>
+                                        </form>
+                                    </c:if>
+
+                                    <c:if test="${allowedValidation != null && allowedValidation && item.getPublishedDate() == null}" >
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal${item.getId()}">
+                                            Ajoutez une date de publication
+                                        </button>
+                                    </c:if>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal${item.getId()}" tabindex="-1" role="dialog" aria-labelledby="modal${item.getId()}Title" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">${item.getTitle()}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form action="${pageContext.request.contextPath}/admin/events/update-date/${item.id}" method="post">
+                                                <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label>Date de publication</label>
+                                                            <input type="datetime-local" class="form-control" name="publishedDate" required>
+                                                        </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,6 +135,8 @@
         </div>
     </div>
 </div>
+
+
 
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 d-flex justify-content-between">

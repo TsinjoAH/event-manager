@@ -1,19 +1,21 @@
 package com.management.events.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.management.events.models.common.HasId;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class Event extends HasId {
 
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private String description;
 
@@ -22,6 +24,14 @@ public class Event extends HasId {
 
     @Column(name = "end_date")
     private Timestamp endDate;
+
+    @Column(name = "creation_date", nullable = false, insertable = false, updatable = false)
+    private Timestamp creationDate = Timestamp.valueOf(LocalDateTime.now());
+
+    @Column(name = "published_date", columnDefinition = "TIMESTAMP")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonIgnore
+    private LocalDateTime publishedDate;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
@@ -117,5 +127,21 @@ public class Event extends HasId {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(LocalDateTime publishedDate) {
+        this.publishedDate = publishedDate;
     }
 }

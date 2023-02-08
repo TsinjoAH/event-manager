@@ -15,6 +15,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,7 +57,7 @@ public class EventService {
     }
 
     // update event status to 10 from id
-    public void validateEvent(int id) {
+    public void publishEvent(int id) {
         try (Session session = dao.getSessionFactory().openSession()) {
             Event event = dao.findById(session, Event.class, id);
             event.setStatus(10);
@@ -61,27 +65,46 @@ public class EventService {
         }
     }
 
+    // update event status to 10 from id
+    public void publishAt(int id, LocalDateTime date) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Event event = dao.findById(session, Event.class, id);
+            event.setPublishedDate(date);
+            dao.save(session, event);
+        }
+    }
+
     public List<Event> getValidatedEvents(EventFilter filter) {
         try (Session session = dao.getSessionFactory().openSession()) {
             Criteria criteria = findAll(session, filter);
+            criteria.add(Restrictions.isNotNull("publishedDate"));
+            criteria.add(Restrictions.le("publishedDate", LocalDateTime.now()));
             criteria.add(Restrictions.gt("status", 0));
             return criteria.list();
         }
     }
 
+    public Criteria pendingEvents (Session session, EventFilter filter) {
+        Criteria criteria = findAll(session, filter);
+        criteria.add(
+                Restrictions.or(
+                        Restrictions.eq("status", 0),
+                        Restrictions.isNull("publishedDate")
+                )
+        );
+        return criteria;
+    }
+
     public List<Event> getPendingEvents(EventFilter filter) {
         try (Session session = dao.getSessionFactory().openSession()) {
-            Criteria criteria = findAll(session, filter);
-            criteria.add(Restrictions.eq("status", 0));
-            return criteria.list();
+            return pendingEvents(session, filter).list();
         }
     }
 
     // get pending events by author
     public List<Event> getPendingEventsByAuthor(EventFilter filter, int authorId) {
         try (Session session = dao.getSessionFactory().openSession()) {
-            Criteria criteria = findAll(session, filter);
-            criteria.add(Restrictions.eq("status", 0));
+            Criteria criteria = pendingEvents(session, filter);
             criteria.add(Restrictions.eq("author.id", authorId));
             return criteria.list();
         }

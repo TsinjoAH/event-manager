@@ -8,13 +8,18 @@ import com.management.events.models.formdata.EventFilter;
 import com.management.events.services.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 import static com.management.events.controllers.common.BaseController.render;
 
@@ -117,15 +122,27 @@ public class EventsController {
     }
 
     // validate event via get method, with id as parameter
-    @GetMapping("/admin/events/validate/{id}")
-    public ModelAndView validateEvent(HttpSession session, @PathVariable int id) {
+    @PostMapping("/admin/events/validate/{id}")
+    public ModelAndView publish(HttpSession session, @PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/list-event");
         if (session.getAttribute("connected") == null) {
             modelAndView.setViewName("redirect:/admin/login");
             return modelAndView;
         }
-        service.validateEvent(id);
+        service.publishEvent(id);
         return modelAndView;
     }
+
+    @PostMapping("/admin/events/update-date/{id}")
+    public ModelAndView updateDate(HttpSession session, @PathVariable int id, Event event) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin/list-event");
+        if (session.getAttribute("connected") == null) {
+            modelAndView.setViewName("redirect:/admin/login");
+            return modelAndView;
+        }
+        service.publishAt(id, event.getPublishedDate());
+        return modelAndView;
+    }
+
 
 }
