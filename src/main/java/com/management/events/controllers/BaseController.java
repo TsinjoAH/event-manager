@@ -1,4 +1,4 @@
-package com.management.events.controllers.common;
+package com.management.events.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +9,7 @@ public class BaseController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:front-office";
+        return "redirect:/front-office";
     }
 
     public static ModelAndView render(String layout, String page, String pageTitle) {

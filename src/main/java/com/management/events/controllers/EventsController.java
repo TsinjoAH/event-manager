@@ -13,15 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
-
-import static com.management.events.controllers.common.BaseController.render;
+import static com.management.events.controllers.BaseController.render;
 
 @Controller
 public class EventsController {
