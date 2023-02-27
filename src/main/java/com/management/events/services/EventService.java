@@ -13,8 +13,11 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.events.EventException;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,11 +27,18 @@ import java.util.List;
 @Service
 public class EventService {
 
+    @Autowired
+    ParameterService parameterService;
+
     HibernateDao dao;
     EventFormData formData;
 
     public EventService(HibernateDao dao) {
         this.dao = dao;
+    }
+
+    public Event findById (Integer id) {
+        return dao.findById(Event.class, id);
     }
 
     public EventFormData fetchFormData () {
@@ -43,16 +53,17 @@ public class EventService {
     }
 
     private Criteria findAll(Session session, EventFilter filter) {
+        int pageSize = parameterService.getHomePageSize(session);
         Criterion[] conditions = filter.getConditions();
         Order order = filter.getOrder();
-        int first = filter.getPage() * 4;
+        int first = filter.getPage() * pageSize;
         Criteria criteria = session.createCriteria(Event.class);;
         for (Criterion condition : conditions) {
             criteria.add(condition);
         }
         criteria.addOrder(order);
         criteria.setFirstResult(first);
-        criteria.setMaxResults(4);
+        criteria.setMaxResults(pageSize);
         return criteria;
     }
 
@@ -118,16 +129,36 @@ public class EventService {
     }
 
     public Event create (Event event) throws Exception {
-        if (event.getType().getId() == 2) {
-            event.setEndDate(null);
-        }
-        else {
-            if (!event.getEndDate().after(event.getStartDate())) {
-                throw new InputException("verifiez vos dates");
-            }
-        }
+        verifyDate(event);
         event.setImage(Util.saveImage(event.getImage()));
         return dao.save(event);
     }
 
+    public Event update(Integer id, Event event) throws Exception {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Event oldEvent = dao.findById(session, Event.class, id);
+            oldEvent.setTitle(event.getTitle());
+            oldEvent.setDescription(event.getDescription());
+            oldEvent.setStartDate(event.getStartDate());
+            oldEvent.setEndDate(event.getEndDate());
+            oldEvent.setCity(event.getCity());
+            oldEvent.setType(event.getType());
+            if (!event.getImage().isEmpty()) {
+                oldEvent.setImage(Util.saveImage(event.getImage()));
+            }
+            verifyDate(event);
+            return dao.save(session, oldEvent);
+        }
+    }
+
+    public void verifyDate(Event event) throws InputException {
+        if (event.getType().getId() == 2) {
+            event.setEndDate(null);
+        }
+        else {
+            if (event.getEndDate() == null || !event.getEndDate().after(event.getStartDate())) {
+                throw new InputException("verifiez vos dates");
+            }
+        }
+    }
 }

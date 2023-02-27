@@ -9,7 +9,7 @@ public class BaseController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/front-office";
+        return "index";
     }
 
     public static ModelAndView render(String layout, String page, String pageTitle) {

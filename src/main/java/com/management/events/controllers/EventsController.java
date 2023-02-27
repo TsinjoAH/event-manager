@@ -6,6 +6,9 @@ import com.management.events.models.Author;
 import com.management.events.models.Event;
 import com.management.events.models.formdata.EventFilter;
 import com.management.events.services.EventService;
+import com.management.events.services.LoginService;
+import com.management.events.services.ParameterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +22,50 @@ import static com.management.events.controllers.BaseController.render;
 public class EventsController {
 
     EventService service;
+    @Autowired
+    ParameterService parameterService;
 
     public EventsController(EventService service) {
         this.service = service;
     }
+
+    @GetMapping("/update/{id}")
+    public ModelAndView update(@PathVariable Integer id, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("update-event");
+        if (!LoginService.isConnected(session)) {
+            modelAndView.setViewName("redirect:/author/login");
+            return modelAndView;
+        }
+        Event event = service.findById(id);
+        if (event == null) {
+            modelAndView.setViewName("redirect:/front-office");
+            return modelAndView;
+        }
+        modelAndView.addObject("event", event);
+        modelAndView.addObject("formData", service.fetchFormData());
+        return modelAndView;
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Event event, HttpSession session) throws Exception{
+        try {
+            if (!LoginService.isConnected(session)) {
+                return ResponseEntity.badRequest().body(new FormattedError("Vous devez être connecté pour modifier un événement"));
+            }
+            return ResponseEntity.ok(service.update(id, event));
+        }
+        catch (InputException e) {
+            return ResponseEntity.badRequest().body(new FormattedError(e));
+        }
+    }
+
 
     @PostMapping("/save-event")
     public ResponseEntity<?> saveEvent(@RequestBody Event event, HttpSession session) throws Exception{
         try {
             Author author = (Author) session.getAttribute("author_connected");
             if (author == null) {
-                return ResponseEntity.badRequest().body(new FormattedError("Vous devez être connecté pour créer un événement"));
+                return ResponseEntity.badRequest().body(new FormattedError("Vous devez être connecté pour modifier un événement"));
             }
             event.setAuthor(author);
             return ResponseEntity.ok(service.create(event));
@@ -51,6 +87,7 @@ public class EventsController {
         modelAndView.addObject("formData", service.fetchFormData());
         modelAndView.addObject("events", service.getPendingEventsByAuthor(filter,author.getId()));
         modelAndView.addObject("filter", filter);
+        modelAndView.addObject("allowUpdate", true);
         return modelAndView;
     }
 
@@ -71,6 +108,7 @@ public class EventsController {
         modelAndView.addObject("events", service.getPendingEvents(filter));
         modelAndView.addObject("filter", filter);
         modelAndView.addObject("allowedValidation", true);
+        modelAndView.addObject("currVal", parameterService.getHomePageSize());
         return modelAndView;
     }
 
@@ -89,6 +127,8 @@ public class EventsController {
         modelAndView.addObject("formData", service.fetchFormData());
         modelAndView.addObject("events", service.getValidatedEvents(filter));
         modelAndView.addObject("filter", filter);
+        modelAndView.addObject("allowUpdate", true);
+        modelAndView.addObject("currVal", parameterService.getHomePageSize());
         return modelAndView;
     }
 
@@ -98,6 +138,7 @@ public class EventsController {
         ModelAndView view = render("layout/layout-front", "list-event.jsp", "Front office");
         view.addObject("formData", service.fetchFormData());
         view.addObject("events", service.getValidatedEvents(filter));
+        view.addObject("allowUpdate", true);
         view.addObject("filter", filter);
         return view;
     }

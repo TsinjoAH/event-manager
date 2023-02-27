@@ -5,6 +5,7 @@ import com.management.events.models.common.LoginEntity;
 import com.spring.hibernate.dao.HibernateDao;
 import org.hibernate.criterion.Restrictions;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,10 @@ public class LoginService <T extends LoginEntity> {
         T found = list.get(0);
         if (Objects.equals(user.getPassword(), found.getPassword())) return found;
         throw new InputException("wrong password");
+    }
+
+    public static boolean isConnected (HttpSession httpSession) {
+        return httpSession.getAttribute("author_connected") != null || httpSession.getAttribute("connected") != null;
     }
 
 }

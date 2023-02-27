@@ -89,43 +89,11 @@
                                     <u>Date de creation:</u> ${item.getCreationDate().toString().replace("T", " ").substring(0, 16)} <br>
                                 </p>
                                 <div class="d-flex">
-                                    <%-- validate action btn if request attribute allowedValidation and isValidated false --%>
-                                    <c:if test="${allowedValidation != null && allowedValidation && !item.isValidated()}" >
-                                        <form class="mr-2" action="${pageContext.request.contextPath}/admin/events/validate/${item.id}" method="POST">
-                                            <button class="btn btn-primary">Publier</button>
-                                        </form>
+                                    <c:if test="${allowUpdate != null && allowUpdate}" >
+                                        <a class="mr-2 btn btn-warning" href="${pageContext.request.contextPath}/update/${item.id}">
+                                            Modifier
+                                        </a>
                                     </c:if>
-
-                                    <c:if test="${allowedValidation != null && allowedValidation && item.getPublishedDate() == null}" >
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal${item.getId()}">
-                                            Ajoutez une date de publication
-                                        </button>
-                                    </c:if>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade" id="modal${item.getId()}" tabindex="-1" role="dialog" aria-labelledby="modal${item.getId()}Title" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">${item.getTitle()}</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="${pageContext.request.contextPath}/admin/events/update-date/${item.id}" method="post">
-                                                <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label>Date de publication</label>
-                                                            <input type="datetime-local" class="form-control" name="publishedDate" required>
-                                                        </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +109,7 @@
 <div class="row mt-3">
     <div class="col-md-10 offset-md-1 d-flex justify-content-between">
         <button class="btn btn-outline-primary" onclick="goto(-1)" ${filter.getPage() > 0 ? "": "disabled"} >Previous</button>
-        <button class="btn btn-outline-primary" onclick="goto(1)" ${events.size() > 0 && events.size() == 4 ? "": "disabled"} >Next</button>
+        <button class="btn btn-outline-primary" onclick="goto(1)" ${events.size() > 0 && events.size() == currVal ? "": "disabled"} >Next</button>
     </div>
 </div>
 <br>

@@ -3,14 +3,20 @@ package com.management.events.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.management.events.models.common.HasId;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.sql.Time;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Event extends HasId {
 
     @Column(nullable = false)
@@ -52,96 +58,12 @@ public class Event extends HasId {
     private Author author;
 
 
+    @Column(name = "home_status", nullable = false)
+    private Integer homeStatus = 0;
+
+
     // is validated method
     public boolean isValidated() {
         return status > 0;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Timestamp getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Timestamp startDate) {
-        this.startDate = startDate;
-    }
-
-    public Timestamp getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Timestamp endDate) {
-        this.endDate = endDate;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public Timestamp getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(LocalDateTime publishedDate) {
-        this.publishedDate = publishedDate;
     }
 }
