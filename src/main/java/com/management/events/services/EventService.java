@@ -1,12 +1,12 @@
 package com.management.events.services;
 
 import com.management.events.exceptions.InputException;
-import com.management.events.models.formdata.EventFilter;
-import com.management.events.utils.Util;
 import com.management.events.models.City;
 import com.management.events.models.Event;
 import com.management.events.models.Type;
+import com.management.events.models.formdata.EventFilter;
 import com.management.events.models.formdata.EventFormData;
+import com.management.events.utils.Util;
 import com.spring.hibernate.dao.HibernateDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -15,13 +15,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.events.EventException;
 
-import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -61,6 +57,7 @@ public class EventService {
         for (Criterion condition : conditions) {
             criteria.add(condition);
         }
+        criteria.addOrder(Order.desc("homeStatus"));
         criteria.addOrder(order);
         criteria.setFirstResult(first);
         criteria.setMaxResults(pageSize);
@@ -76,20 +73,11 @@ public class EventService {
         }
     }
 
-    // update event status to 10 from id
-    public void publishAt(int id, LocalDateTime date) {
-        try (Session session = dao.getSessionFactory().openSession()) {
-            Event event = dao.findById(session, Event.class, id);
-            event.setPublishedDate(date);
-            dao.save(session, event);
-        }
-    }
-
     public List<Event> getValidatedEvents(EventFilter filter) {
         try (Session session = dao.getSessionFactory().openSession()) {
             Criteria criteria = findAll(session, filter);
             criteria.add(Restrictions.isNotNull("publishedDate"));
-            criteria.add(Restrictions.le("publishedDate", LocalDateTime.now()));
+            criteria.add(Restrictions.le("publishedDate", Timestamp.valueOf(LocalDateTime.now())));
             criteria.add(Restrictions.gt("status", 0));
             return criteria.list();
         }
@@ -143,6 +131,9 @@ public class EventService {
             oldEvent.setEndDate(event.getEndDate());
             oldEvent.setCity(event.getCity());
             oldEvent.setType(event.getType());
+            oldEvent.setPublishedDate(event.getPublishedDate());
+            oldEvent.setStatus(event.getStatus());
+            oldEvent.setHomeStatus(event.getHomeStatus());
             if (!event.getImage().isEmpty()) {
                 oldEvent.setImage(Util.saveImage(event.getImage()));
             }
@@ -159,6 +150,14 @@ public class EventService {
             if (event.getEndDate() == null || !event.getEndDate().after(event.getStartDate())) {
                 throw new InputException("verifiez vos dates");
             }
+        }
+    }
+
+    public List<Event> getEventsByAuthor(EventFilter filter, Integer id) {
+        try (Session session = dao.getSessionFactory().openSession()) {
+            Criteria criteria = findAll(session, filter);
+            criteria.add(Restrictions.eq("author.id", id));
+            return criteria.list();
         }
     }
 }

@@ -31,4 +31,10 @@ public class LoginService <T extends LoginEntity> {
         return httpSession.getAttribute("author_connected") != null || httpSession.getAttribute("connected") != null;
     }
 
+    // isAdmin function
+    public static boolean isAdmin (HttpSession httpSession) {
+        return httpSession.getAttribute("connected") != null;
+    }
+
+
 }

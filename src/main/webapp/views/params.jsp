@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <br>
 <div class="card">
@@ -10,6 +11,15 @@
                     <input type="number" name="value" value="${currVal}" class="form-control">
                 </div>
             </div>
+            <c:if test="${error != null}" >
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger">
+                            ${error}
+                    </div>
+                </div>
+            </div>
+            </c:if>
             <button class="btn btn-primary">Valider</button>
         </form>
     </div>

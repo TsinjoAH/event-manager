@@ -1,3 +1,4 @@
+<%@ page import="com.management.events.services.LoginService" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
@@ -51,7 +52,7 @@
 
                                 <div class="form-group col-md-4 mb-3">
                                     <label>Type</label>
-                                    <select name="type.id" class="custom-select" required>
+                                    <select name="type.id" class="custom-select" id="type" required>
                                         <option value="">-- choisir le type --</option>
                                         <c:forEach items="${formData.getTypes()}" var="type">
                                             <option value="${type.getId()}" ${type.getId() == event.type.id ? "selected": ""}>${type.getName()}</option>
@@ -78,20 +79,45 @@
 
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Date debut</label>
-                                    <input name="startDate" value="${event.startDate}" type="datetime-local" class="form-control" required>
+                                    <input name="startDate" value="${event.startDate != null ? event.startDate.toString().substring(0,16) : "" }" type="datetime-local" class="form-control" required>
                                 </div>
 
                                 <div class="form-group col-md-6 mb-3">
-                                    <label>Date fin</label>
-                                    <input name="endDate"  value="${event.endDate}" type="datetime-local" class="form-control" >
+                                    <label>Date fin </label>
+                                    <input name="endDate" id="endDate" value="${event.endDate != null ? event.endDate.toString().substring(0,16) : "" }" type="datetime-local" class="form-control" >
                                 </div>
 
-                                <div class="form-group col-md-12">
+                                <% if (LoginService.isAdmin(request.getSession())) { %>
+                                <div class="form-group col-md-6">
+                                    <label>Date de publication</label>
+                                    <input type="datetime-local" class="form-control" name="publishedDate" value="${event.publishedDate != null ? event.publishedDate.toString().substring(0,16) : "" }">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label>Etat</label>
+                                    <select name="status" class="custom-select" required>
+                                        <option value="">-- choisir l'etat --</option>
+                                        <option value="10" ${event.status == 10 ? "selected": ""}>PUBLISHED</option>
+                                        <option value="0" ${event.status == 0 ? "selected": ""}>DRAFT</option>
+                                    </select>
+                                </div>
+                                <% } %>
+
+                                <div class="form-group col-md-6">
                                     <label>Image</label>
                                     <div class="input-group">
                                         <input name="image" type="file" class="custom-file-input" id="image">
                                         <label for="image" class="custom-file-label" >Choisir une image</label>
                                     </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>On HomePage</label>
+                                    <%-- select --%>
+                                    <select name="homeStatus" class="custom-select" required>
+                                        <option value="">-- choisir --</option>
+                                        <option value="10" ${event.homeStatus == 10 ? "selected": ""}>Oui</option>
+                                        <option value="0" ${event.homeStatus == 0 ? "selected": ""}>Non</option>
+                                    </select>
                                 </div>
 
                                 <div id="preview" class="col-md-4">
@@ -99,6 +125,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="card-footer bg-transparent">
                             <button id="btn" class="btn btn-primary" >Modifier</button>
@@ -125,7 +152,28 @@
 <div>
     <script src="${pageContext.request.contextPath}/resources/assets/plugins/jquery/jquery.min.js"></script>
     <script>
-        let fileState = false;
+
+        let endDate = $("#endDate");
+        let type = $("#type");
+        let check = () => {
+            if (type.val() === "2") {
+                endDate.val("");
+                endDate.attr("disabled", true);
+            }
+            else {
+                endDate.attr("disabled", false);
+            }
+        }
+
+        check();
+
+        type.change(() => {
+            check();
+        });
+
+    </script>
+    <script>
+        let fileState = true;
         $("#image").change(() => {
             let file = document.getElementById('image').files[0];
             let fileName = file.name;
@@ -150,10 +198,14 @@
 
         const getBase64 = (get) => {
             let reader = new FileReader();
-            reader.readAsDataURL(document.getElementById('image').files[0]);
-            reader.onload = () => {
-                get(reader.result);
+            let file = document.getElementById('image').files[0];
+            if (file) {
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    get(reader.result);
+                }
             }
+            get("");
         }
 
         const getData = (get) => {
@@ -167,6 +219,7 @@
                 }
                 json[key] = value;
             }
+            // skip if no image
             getBase64((base64) => {
                 json["image"] = base64;
                 get(json);

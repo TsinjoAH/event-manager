@@ -76,7 +76,7 @@
                                 <a href="${pageContext.request.contextPath}/my-events" class='nav-link'>
                                     <i class='nav-icon fas fa-list'></i>
                                     <p>
-                                        Not validated events
+                                        MyEvent
                                     </p>
                                 </a>
                             </li>

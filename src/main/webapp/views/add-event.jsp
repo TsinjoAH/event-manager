@@ -61,12 +61,21 @@
                     <input name="endDate"  value="2023-01-10 17:00" type="datetime-local" class="form-control" required>
                 </div>
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label>Image</label>
                     <div class="input-group">
-                        <input name="image" type="file" class="custom-file-input" id="image" required>
+                        <input name="image" type="file" class="custom-file-input" id="image">
                         <label for="image" class="custom-file-label" >Choisir une image</label>
                     </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>On HomePage</label>
+                    <%-- select --%>
+                    <select name="homeStatus" class="custom-select" required>
+                        <option value="">-- choisir --</option>
+                        <option value="10">Oui</option>
+                        <option value="0">Non</option>
+                    </select>
                 </div>
 
                 <div id="preview" class="col-md-4">

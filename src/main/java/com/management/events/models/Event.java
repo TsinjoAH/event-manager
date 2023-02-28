@@ -1,11 +1,9 @@
 package com.management.events.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.management.events.models.common.HasId;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,10 +32,8 @@ public class Event extends HasId {
     @Column(name = "creation_date", nullable = false, insertable = false, updatable = false)
     private Timestamp creationDate = Timestamp.valueOf(LocalDateTime.now());
 
-    @Column(name = "published_date", columnDefinition = "TIMESTAMP")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @JsonIgnore
-    private LocalDateTime publishedDate;
+    @Column(name = "published_date")
+    private Timestamp publishedDate;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)

@@ -85,9 +85,10 @@ public class EventsController {
         }
         Author author = (Author) session.getAttribute("author_connected");
         modelAndView.addObject("formData", service.fetchFormData());
-        modelAndView.addObject("events", service.getPendingEventsByAuthor(filter,author.getId()));
+        modelAndView.addObject("events", service.getEventsByAuthor(filter,author.getId()));
         modelAndView.addObject("filter", filter);
         modelAndView.addObject("allowUpdate", true);
+        modelAndView.addObject("currVal", parameterService.getHomePageSize());
         return modelAndView;
     }
 
@@ -108,6 +109,7 @@ public class EventsController {
         modelAndView.addObject("events", service.getPendingEvents(filter));
         modelAndView.addObject("filter", filter);
         modelAndView.addObject("allowedValidation", true);
+        modelAndView.addObject("allowUpdate", true);
         modelAndView.addObject("currVal", parameterService.getHomePageSize());
         return modelAndView;
     }
@@ -127,7 +129,6 @@ public class EventsController {
         modelAndView.addObject("formData", service.fetchFormData());
         modelAndView.addObject("events", service.getValidatedEvents(filter));
         modelAndView.addObject("filter", filter);
-        modelAndView.addObject("allowUpdate", true);
         modelAndView.addObject("currVal", parameterService.getHomePageSize());
         return modelAndView;
     }
@@ -163,17 +164,6 @@ public class EventsController {
             return modelAndView;
         }
         service.publishEvent(id);
-        return modelAndView;
-    }
-
-    @PostMapping("/admin/events/update-date/{id}")
-    public ModelAndView updateDate(HttpSession session, @PathVariable int id, Event event) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/admin/list-event");
-        if (session.getAttribute("connected") == null) {
-            modelAndView.setViewName("redirect:/admin/login");
-            return modelAndView;
-        }
-        service.publishAt(id, event.getPublishedDate());
         return modelAndView;
     }
 
